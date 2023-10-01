@@ -12,8 +12,11 @@ app.get("/", async (_req, res) => {
   res.json(re);
 });
 
-app.delete("/", (_req, res) => {
-  res.send("Hello World!");
+app.delete("/", async (req, res) => {
+  const id = req.query.id as string;
+  const re = await posts.delete(id);
+  console.log(re);
+  res.json(re);
 });
 
 app.listen(port, () => {
