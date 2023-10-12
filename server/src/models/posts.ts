@@ -1,45 +1,54 @@
 import Client from "../database";
 
-export type Post = {
+export type PostType = {
   id: number;
   text: string;
   likes: number;
 };
 
-export class Posts {
-  async index(): Promise<Post[]> {
+export class Post {
+  async index(): Promise<PostType[]> {
     try {
       const conn = await Client.connect();
-      const query = "SELECT * FROM posts;";
+      const query = "SELECT * FROM posts";
       const result = await conn.query(query);
       conn.release();
       return result.rows;
     } catch (error) {
-      throw new Error(`Cannot get posts ${error}`);
+      throw new Error(`Could not get the posts. Erorr: ${error}`);
     }
   }
-  async delete(id: string): Promise<Post[]> {
+  async show(id: string): Promise<PostType> {
+    try {
+      const conn = await Client.connect();
+      const sql = "SELECT * FROM posts WHERE id=($1)";
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`Could not find post ${id}. Error: ${err}`);
+    }
+  }
+  async create(text: string): Promise<PostType> {
+    try {
+      const conn = await Client.connect();
+      const query = "INSERT INTO posts (text, likes) VALUES($1, 0) RETURNING *";
+      const result = await conn.query(query, [text]);
+      conn.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Could not add new post. Error: ${error}`);
+    }
+  }
+  async delete(id: string): Promise<PostType> {
     try {
       const conn = await Client.connect();
       const query = "DELETE FROM posts WHERE id=($1)";
       const result = await conn.query(query, [id]);
       conn.release();
-      return result.rows;
-    } catch (error) {
-      throw new Error(
-        `couldn't delete the post with id: ${id} due to the error: ${error}`,
-      );
-    }
-  }
-  async create(text: string): Promise<Post> {
-    try {
-      const conn = await Client.connect();
-      const query = "INSERT INTO posts (text) VALUES($1) RETURNING *";
-      const result = await conn.query(query, [text]);
-      conn.release();
       return result.rows[0];
     } catch (error) {
-      throw new Error(`couldn't create the post due to the error: ${error}`);
+      throw new Error(`Could not delete post ${id}. Error: ${error}`);
     }
   }
 }

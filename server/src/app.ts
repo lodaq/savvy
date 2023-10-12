@@ -3,8 +3,8 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-import { Posts } from "./models/posts";
-const posts = new Posts();
+import { Post } from "./models/posts";
+const posts = new Post();
 
 app.get("/", async (_req, res) => {
   const re = await posts.index();
