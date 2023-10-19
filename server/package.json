@@ -4,20 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/app.ts",
+    "dev": "nodemon ./src/server.ts",
     "watch": "tsc-watch --esModuleInterop src/server --outDir ./dist --onSuccess",
     "migrate": "db-migrate create posts --sql-file",
     "migrate-up": "db-migrate up",
     "migrate-down": "db-migrate down",
-    "tt": "ENV=test && npx tsc && db-migrate -e test up && jest && db-migrate -e test down",
-    "test": "db-migrate -e test up ; jest ./src/models/tests/posts.spec.ts ; db-migrate -e test down"
+    "test": "ENV=test db-migrate -e test up ; ENV=test jest ./src/models/tests/posts.spec.ts ; ENV=test db-migrate -e test down"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@babel/preset-env": "^7.22.20",
-    "body-parser": "^1.20.2",
+    "@types/cors": "^2.8.15",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "db-migrate": "^0.11.14",
     "db-migrate-pg": "^1.5.2",
     "dotenv": "^16.3.1",

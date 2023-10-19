@@ -12,5 +12,6 @@
     "database": "savvy_test",
     "user": "kmsf",
     "password": "password"
-  }
+  },
+  "sql-file": true
 }

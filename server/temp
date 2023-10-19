@@ -1,8 +1,12 @@
-
 create table posts (
 	id SERIAL PRIMARY KEY,
 	text TEXT,
 	likes INT
+);
+create table articles (
+	id SERIAL PRIMARY KEY,
+	title TEXT,
+	content TEXT
 );
 insert into posts (id, text, likes) values (1, 'Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.', 1);
 insert into posts (id, text, likes) values (2, 'Duis mattis egestas metus. Aenean fermentum.', 44);
