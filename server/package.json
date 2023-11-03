@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node ./dist/src/server.js",
+    "build": "npx tsc",
     "dev": "nodemon ./src/server.ts",
     "watch": "tsc-watch --esModuleInterop src/server --outDir ./dist --onSuccess",
     "migrate": "db-migrate create posts --sql-file",
