@@ -1,5 +1,5 @@
-import express, { Request, Response } from "express";
-import { PostType, Post } from "../models/posts";
+import express, { Request, Response } from 'express';
+import { Post } from '../models/posts';
 
 const store = new Post();
 
@@ -33,10 +33,10 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const postRoutes = (app: express.Application) => {
-  app.get("/posts", index);
-  app.get("/posts/:id", show);
-  app.post("/posts", create);
-  app.delete("/posts/:id", destroy);
+  app.get('/posts', index);
+  app.get('/posts/:id', show);
+  app.post('/posts', create);
+  app.delete('/posts/:id', destroy);
 };
 
 export default postRoutes;

@@ -1,5 +1,5 @@
-import express, { Request, Response } from "express";
-import { ArticleType, Article } from "../models/articles";
+import express, { Request, Response } from 'express';
+import { ArticleType, Article } from '../models/articles';
 
 const store = new Article();
 
@@ -34,10 +34,10 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const articleRoutes = (app: express.Application) => {
-  app.get("/articles", index);
-  app.get("/articles/:id", show);
-  app.post("/articles", create);
-  app.delete("/articles/:id", destroy);
+  app.get('/articles', index);
+  app.get('/articles/:id', show);
+  app.post('/articles', create);
+  app.delete('/articles/:id', destroy);
 };
 
 export default articleRoutes;

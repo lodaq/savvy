@@ -1,4 +1,4 @@
-import Client from "../database";
+import Client from '../database';
 
 export type PostType = {
   id: number;
@@ -10,7 +10,7 @@ export class Post {
   async index(): Promise<PostType[]> {
     try {
       const conn = await Client.connect();
-      const query = "SELECT * FROM posts";
+      const query = 'SELECT * FROM posts';
       const result = await conn.query(query);
       conn.release();
       return result.rows;
@@ -21,7 +21,7 @@ export class Post {
   async show(id: string): Promise<PostType> {
     try {
       const conn = await Client.connect();
-      const sql = "SELECT * FROM posts WHERE id=($1)";
+      const sql = 'SELECT * FROM posts WHERE id=($1)';
       const result = await conn.query(sql, [id]);
       conn.release();
       return result.rows[0];
@@ -32,7 +32,7 @@ export class Post {
   async create(text: string): Promise<PostType> {
     try {
       const conn = await Client.connect();
-      const query = "INSERT INTO posts (text, likes) VALUES($1, 0) RETURNING *";
+      const query = 'INSERT INTO posts (text, likes) VALUES($1, 0) RETURNING *';
       const result = await conn.query(query, [text]);
       conn.release();
       return result.rows[0];
@@ -43,7 +43,7 @@ export class Post {
   async delete(id: string): Promise<PostType> {
     try {
       const conn = await Client.connect();
-      const query = "DELETE FROM posts WHERE id=($1)";
+      const query = 'DELETE FROM posts WHERE id=($1)';
       const result = await conn.query(query, [id]);
       conn.release();
       return result.rows[0];

@@ -1,4 +1,4 @@
-import Client from "../database";
+import Client from '../database';
 
 export type ArticleType = {
   id?: string;
@@ -10,7 +10,7 @@ export class Article {
   async index(): Promise<ArticleType[]> {
     try {
       const conn = await Client.connect();
-      const query = "SELECT * FROM articles";
+      const query = 'SELECT * FROM articles';
       const result = await conn.query(query);
       conn.release();
       return result.rows;
@@ -21,7 +21,7 @@ export class Article {
   async show(id: string): Promise<ArticleType> {
     try {
       const conn = await Client.connect();
-      const sql = "SELECT * FROM articles WHERE id=($1)";
+      const sql = 'SELECT * FROM articles WHERE id=($1)';
       const result = await conn.query(sql, [id]);
       conn.release();
       return result.rows[0];
@@ -32,8 +32,7 @@ export class Article {
   async create({ title, content }: ArticleType): Promise<ArticleType> {
     try {
       const conn = await Client.connect();
-      const query =
-        "INSERT INTO articles (title, content) VALUES($1, $2) RETURNING *";
+      const query = 'INSERT INTO articles (title, content) VALUES($1, $2) RETURNING *';
       const result = await conn.query(query, [title, content]);
       conn.release();
       return result.rows[0];
@@ -44,7 +43,7 @@ export class Article {
   async delete(id: string): Promise<ArticleType> {
     try {
       const conn = await Client.connect();
-      const query = "DELETE FROM articles WHERE id=($1)";
+      const query = 'DELETE FROM articles WHERE id=($1)';
       const result = await conn.query(query, [id]);
       conn.release();
       return result.rows[0];

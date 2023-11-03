@@ -1,5 +1,3 @@
-export default function TweetsPage(){
-  return <div>TweetsPage</div>
+export default function TweetsPage() {
+  return <div>TweetsPage</div>;
 }
-
-

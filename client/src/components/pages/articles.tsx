@@ -1,29 +1,33 @@
-import { Textarea, Input, Button } from "@nextui-org/react";
-import { useState } from "react";
+/* import { Textarea, Input, Button } from '@nextui-org/react';
+import { useState } from 'react';
 
-type ArticleType = {
+interface ArticleType {
   title: string;
   content: string;
-};
+} */
 
 function ArticlesPage() {
-  const [article, setArticle] = useState<ArticleType>({
-    title: "",
-    content: "",
+  /* const [article, setArticle] = useState<ArticleType>({
+    title: '',
+    content: '',
   });
   const post = () => {
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(article),
     };
-    fetch("http://localhost:3000/articles", options)
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
-  };
+    fetch('http://localhost:3000/articles', options)
+      .then(async (response) => await response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }; */
 
   return (
     <div className="p-5 min-h-screen w-full md:flex-nowrap gap-4 bg-slate-500">
@@ -34,17 +38,17 @@ function ArticlesPage() {
       {/*     </SelectItem> */}
       {/*   ))} */}
       {/* </Select> */}
-      <Input
+      {/* <Input
         size="sm"
         type="text"
         label="Username"
         className="w-[200px]"
-        onChange={(e) =>
+        onChange={(e) => {
           setArticle((article) => ({
             ...article,
             title: e.currentTarget.value,
-          }))
-        }
+          })) }
+        }}
       />
       <Textarea
         isRequired
@@ -52,17 +56,25 @@ function ArticlesPage() {
         labelPlacement="outside"
         placeholder="Enter your description"
         className="max-w-xs"
-        onChange={(e) =>
+        onChange={(e) => {
           setArticle((article) => ({
             ...article,
             content: e.currentTarget.value,
-          }))
-        }
+          })) }
+        }}
       />
-      <Button onClick={() => post()}>submit</Button>
+
+      <Button
+        onClick={() => {
+          post();
+        }}
+      >
+        submit
+      </Button>
       <h2>the article is: </h2>
       <p>title: {article.title}</p>
       <p>content: {article.content}</p>
+      */}
     </div>
   );
 }

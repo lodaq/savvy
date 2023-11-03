@@ -1,4 +1,3 @@
-export default function QuotesPage(){
-  return <div>QuotesPage</div>
+export default function QuotesPage() {
+  return <div>QuotesPage</div>;
 }
-

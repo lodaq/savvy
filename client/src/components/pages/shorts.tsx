@@ -1,5 +1,3 @@
-export default function ShortsPage(){
-  return <div>ShortsPage</div>
+export default function ShortsPage() {
+  return <div>ShortsPage</div>;
 }
-
-

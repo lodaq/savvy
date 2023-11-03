@@ -1,4 +1,3 @@
-export default function LinksPage(){
-  return <div>LinksPage</div>
+export default function LinksPage() {
+  return <div>LinksPage</div>;
 }
-
