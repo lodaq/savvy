@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import mongoose, { Schema, Document, model, Types } from 'mongoose';
 import { Pool } from 'pg';
 // initialize environment variables
 dotenv.config();
@@ -15,11 +16,13 @@ const {
   POSTGRES_TEST_PORT,
   POSTGRES_TEST_PASSWORD,
   ENV,
+  MONGODB_URI,
 } = process.env;
 
-// a connection to the database
-let client: Pool;
 console.log(ENV);
+
+// setup postgres
+let client: Pool;
 
 if (ENV === 'dev') {
   client = new Pool({
@@ -39,16 +42,13 @@ if (ENV === 'dev') {
   });
 }
 
+// setup mongoose
+async function main() {
+  await mongoose.connect(MONGODB_URI);
+}
+
+main()
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch((err) => console.log(`MongoDB connection error: ${err}`));
+
 export default client;
-
-/* import { configDotenv } from "dotenv";
-import postgres from "postgres";
-
-configDotenv();
-
-const connectionString = process.env.POSTGRES_CONNECTION_STRING;
-const sql = postgres(connectionString);
-
-console.log(connectionString);
-
-export default sql; */

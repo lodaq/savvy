@@ -1,0 +1,2 @@
+- use an cloudinary and an upload library from npm to upload images
+- store the icon and the description w/ the link on the server or should i get them from the client easier??

@@ -1,7 +1,7 @@
 import { Listbox, ListboxItem } from '@nextui-org/react';
 import { ListboxWrapper } from './listbox-wrapper.tsx';
 import { useNavigate } from 'react-router-dom';
-import { MdArticle, MdImage, MdLocalPostOffice } from 'react-icons/md';
+import { MdArticle, MdImage, MdLocalPostOffice, MdShare } from 'react-icons/md';
 
 const iconClasses = 'text-xl fill-green-500 pointer-events-none flex-shrink-0';
 const items = [
@@ -19,6 +19,11 @@ const items = [
     name: 'posts',
     href: '/posts',
     icon: <MdLocalPostOffice className={iconClasses} />,
+  },
+  {
+    name: 'shares',
+    href: '/shares',
+    icon: <MdShare className={iconClasses} />,
   },
 ];
 

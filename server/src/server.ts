@@ -1,10 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 // import { Post } from './models/posts';
-// import articleRoutes from './handlers/articles';
-// import postsRoutes from './handlers/posts';
+import articleRoutes from './handlers/articles';
+import postsRoutes from './handlers/posts';
 import { configDotenv } from 'dotenv';
-import Client from './database';
+import shareRoutes from './handlers/shares';
+import bodyParser from 'body-parser';
 
 configDotenv();
 
@@ -16,10 +17,12 @@ const corsOptions: cors.CorsOptions = {
   optionsSuccessStatus: 200,
 };
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors(corsOptions));
 
-const getPosts = async () => {
+/* const getPosts = async () => {
   try {
     const conn = await Client.connect();
     const query = 'SELECT * FROM posts';
@@ -29,15 +32,29 @@ const getPosts = async () => {
   } catch (error) {
     throw new Error(`Could not get the posts. Erorr: ${error}`);
   }
-};
+}; */
 
-/* articleRoutes(app);
-postsRoutes(app); */
+articleRoutes(app);
+postsRoutes(app);
+shareRoutes(app);
 
-app.get('/posts', async (_req, res) => {
+/* app.get('/posts', async (_req, res) => {
   const posts = await getPosts();
 
   res.json(posts);
+}); */
+
+app.get('/', async (_req, res) => {
+  /* const text = await new TextModel({
+    _id: new mongoose.Types.ObjectId(),
+    date: new Date(),
+    likes: 543,
+    type: 'text',
+    text: 'khalid L dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
+  }).save();
+  res.json(text); */
+
+  res.send('<h1>Welcome!</h1>');
 });
 
 app.listen(port, () => {

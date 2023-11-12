@@ -1,0 +1,2 @@
+- fix the styling problem
+- add a refresh button to the loading spinner to refresh the page because of render

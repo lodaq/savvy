@@ -1,4 +1,4 @@
-import Client from '../database';
+import Client from '../databases';
 
 export type PostType = {
   id: number;

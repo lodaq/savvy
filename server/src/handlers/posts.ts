@@ -22,8 +22,7 @@ const create = async (req: Request, res: Response) => {
     const newpost = await store.create(post.text);
     res.json(newpost);
   } catch (err) {
-    res.status(400);
-    res.json(err);
+    res.status(400).json(err);
   }
 };
 
