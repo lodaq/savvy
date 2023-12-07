@@ -30,7 +30,7 @@
     }
   },
   "include": [
-    "src"
+    "src",  "types.d.ts", "**/*.ts", "**/*.tsx", 
   ],
   "references": [
     {

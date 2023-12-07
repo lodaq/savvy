@@ -1,14 +1,14 @@
 // main.tsx or main.jsx
+import { NextUIProvider } from '@nextui-org/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { NextUIProvider } from '@nextui-org/react';
-import App from './App';
-import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ImagesPage from './components/pages/images';
+import App from './App';
 import ArticlesPage from './components/pages/articles';
+import ImagesPage from './components/pages/images';
 import PostsPage from './components/pages/posts';
 import SharesPage from './components/pages/shares';
+import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

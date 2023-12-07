@@ -1,1 +1,8 @@
-["post", "text", "quote", "video", "reel", "shorts", "tweet"]
+[
+  { "value": "video", "label": "Video" },
+  { "value": "short", "label": "Short" },
+  { "value": "image", "label": "Image" },
+  { "value": "quote", "label": "Quote" },
+  { "value": "text", "label": "Text" },
+  { "value": "link", "label": "Link" }
+]

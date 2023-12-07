@@ -1,10 +1,11 @@
-import mongoose, { Schema, Document, Model, model, Types } from 'mongoose';
+import mongoose, { Document, Schema, Types, model } from 'mongoose';
 
 // Define a base schema with common fields
 const shareBaseSchema = new Schema({
   _id: Types.ObjectId,
   date: Date,
   likes: Number,
+  caption: String,
   type: String,
 });
 
@@ -38,11 +39,19 @@ const shortSchema = new Schema<ShortDocument>(
 
 interface LinkDocument extends Document {
   url: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  favicon: string;
 }
 
 const linkSchema = new Schema<LinkDocument>(
   {
     url: String,
+    ogTitle: String,
+    ogDescription: String,
+    ogImage: String,
+    favicon: String,
   },
   discriminatorOptions,
 );
@@ -89,12 +98,13 @@ const ImageModel = ShareModel.discriminator<ImageDocument>('image', imageSchema)
 const QuoteModel = ShareModel.discriminator<QuoteDocument>('quote', quoteSchema);
 const TextModel = ShareModel.discriminator<TextDocument>('text', textSchema);
 
-export { shortSchema, videoSchema, linkSchema, ShareModel, imageSchema, quoteSchema, textSchema };
+export { ShareModel, imageSchema, linkSchema, quoteSchema, shortSchema, textSchema, videoSchema };
 
 interface ShareDocument extends Document {
   date: Date;
   likes: number;
   type: string;
+  caption: string;
 }
 
 // Define common fields for creating a new post
@@ -102,6 +112,7 @@ interface CreatePostFields {
   _id: mongoose.Types.ObjectId;
   date: Date;
   likes: number;
+  caption: string;
 }
 
 class Share {
@@ -123,12 +134,13 @@ class Share {
     }
   }
 
-  async createText(text: string): Promise<TextDocument> {
+  async createText(text: string, caption: string): Promise<TextDocument> {
     try {
       const postFields: CreatePostFields = {
         _id: new mongoose.Types.ObjectId(),
         date: new Date(),
         likes: 0,
+        caption,
       };
 
       const result = await TextModel.create({
@@ -143,12 +155,13 @@ class Share {
     }
   }
 
-  async createVideo(url: string): Promise<VideoDocument> {
+  async createVideo(url: string, caption: string): Promise<VideoDocument> {
     try {
       const postFields: CreatePostFields = {
         _id: new mongoose.Types.ObjectId(),
         date: new Date(),
         likes: 0,
+        caption,
       };
 
       const result = await VideoModel.create({
@@ -163,12 +176,13 @@ class Share {
     }
   }
 
-  async createQuote(quote: string): Promise<QuoteDocument> {
+  async createQuote(quote: string, caption: string): Promise<QuoteDocument> {
     try {
       const postFields: CreatePostFields = {
         _id: new mongoose.Types.ObjectId(),
         date: new Date(),
         likes: 0,
+        caption,
       };
 
       const result = await QuoteModel.create({
@@ -183,12 +197,13 @@ class Share {
     }
   }
 
-  async createImage(url: string): Promise<ImageDocument> {
+  async createImage(url: string, caption: string): Promise<ImageDocument> {
     try {
       const postFields: CreatePostFields = {
         _id: new mongoose.Types.ObjectId(),
         date: new Date(),
         likes: 0,
+        caption,
       };
 
       const result = await ImageModel.create({
@@ -203,12 +218,13 @@ class Share {
     }
   }
 
-  async createShort(url: string): Promise<ShortDocument> {
+  async createShort(url: string, caption: string): Promise<ShortDocument> {
     try {
       const postFields: CreatePostFields = {
         _id: new mongoose.Types.ObjectId(),
         date: new Date(),
         likes: 0,
+        caption,
       };
 
       const result = await ShortModel.create({
@@ -223,18 +239,28 @@ class Share {
     }
   }
 
-  async createLink(url: string): Promise<LinkDocument> {
+  async createLink(
+    link: {
+      url: string;
+      ogTitle: string;
+      ogDescription: string;
+      ogImage: string;
+      favicon: string;
+    },
+    caption: string,
+  ): Promise<LinkDocument> {
     try {
       const postFields: CreatePostFields = {
         _id: new mongoose.Types.ObjectId(),
         date: new Date(),
         likes: 0,
+        caption,
       };
 
       const result = await LinkModel.create({
         ...postFields,
         type: 'link',
-        url,
+        ...link,
       });
 
       return result as LinkDocument;
@@ -297,10 +323,26 @@ class Share {
     }
   }
 
+  async likePost(id: string) {
+    try {
+      const post = await ShareModel.findById(id);
+
+      if (!post) return null;
+
+      post.likes += 1;
+
+      const updatedPost = await post.save();
+
+      return updatedPost;
+    } catch (error) {
+      throw new Error(`Could not like post ${id}. Error: ${error}`);
+    }
+  }
+
   async delete(id: string): Promise<ShareDocument | null> {
     try {
       const result = await ShareModel.findByIdAndDelete(id);
-      return result as ShareDocument;
+      return result as unknown as ShareDocument;
     } catch (error) {
       throw new Error(`Could not delete post ${id}. Error: ${error}`);
     }
