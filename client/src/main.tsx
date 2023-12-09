@@ -1,12 +1,10 @@
-// main.tsx or main.jsx
-import { NextUIProvider } from '@nextui-org/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
-import ArticlesPage from './components/pages/articles';
-import ImagesPage from './components/pages/images';
-import SharesPage from './components/pages/shares';
+import ArticlesPage from './pages/articles';
+import ImagesPage from './pages/images';
+import PostsPage from './pages/posts';
 import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -20,17 +18,15 @@ const router = createBrowserRouter([
     children: [
       { path: 'images', element: <ImagesPage /> },
       { path: 'articles', element: <ArticlesPage /> },
-      { path: 'shares', element: <SharesPage /> },
+      { path: 'posts', element: <PostsPage /> },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <NextUIProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </NextUIProvider>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>,
 );

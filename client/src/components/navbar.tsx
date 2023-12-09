@@ -1,9 +1,7 @@
-import { Listbox, ListboxItem } from '@nextui-org/react';
-import { MdArticle, MdImage, MdLocalPostOffice, MdShare } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
-import { ListboxWrapper } from './listbox-wrapper.tsx';
+import { MdArticle, MdImage, MdLocalPostOffice } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
-const iconClasses = 'text-xl fill-green-500 pointer-events-none flex-shrink-0';
+const iconClasses = 'text-xl fill-red-500 pointer-events-none flex-shrink-0';
 const items = [
   {
     name: 'images',
@@ -20,33 +18,18 @@ const items = [
     href: '/posts',
     icon: <MdLocalPostOffice className={iconClasses} />,
   },
-  {
-    name: 'shares',
-    href: '/shares',
-    icon: <MdShare className={iconClasses} />,
-  },
 ];
 
 function Navbar() {
-  const navigate = useNavigate();
   return (
-    <ListboxWrapper>
-      <Listbox variant="faded" aria-label="Listbox menu with icons">
-        {items.map(({ name, href, icon }) => {
-          return (
-            <ListboxItem
-              key={name}
-              startContent={icon}
-              onClick={() => {
-                navigate(href);
-              }}
-            >
-              {name}
-            </ListboxItem>
-          );
-        })}
-      </Listbox>
-    </ListboxWrapper>
+    <div className="bg-slate-500 w-[200px] min-w-[200px] max-w-[200px] h-screen p-2 rounded-r-md sticky top-0 left-0 overflow-auto">
+      {items.map(({ name, href, icon }) => (
+        <Link key={name} to={href} className="flex gap-1 items-center">
+          {icon}
+          {name}
+        </Link>
+      ))}
+    </div>
   );
 }
 

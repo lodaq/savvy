@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 
 export default function App() {
   return (
-    <div className="p-5 min-h-screen w-full md:flex-nowrap flex">
+    <div className="min-h-screen md:flex-nowrap flex gap-1">
       <Navbar />
       <Outlet />
       <Toaster />

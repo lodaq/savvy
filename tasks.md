@@ -4,3 +4,5 @@
 - how to create migrations for the mongodb database
 - what is migration
 - what is this
+- remove next ui
+-
