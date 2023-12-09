@@ -32,7 +32,8 @@ export default function SharesForm() {
   const [numOfShowedPosts, setNumOfShowedPosts] = useState(10);
   const { isPending, error, data, refetch } = useQuery({
     queryKey: ['repoData'],
-    queryFn: async (): Promise<Post[]> => await fetch(import.meta.env.VITE_URL).then(async (res) => await res.json()),
+    queryFn: async (): Promise<Post[]> =>
+      await fetch(import.meta.env.VITE_SERVER_URL).then(async (res) => await res.json()),
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -50,7 +51,7 @@ export default function SharesForm() {
   const type = form.getValues().type;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const res = await fetch(`${import.meta.env.VITE_URL}/${type}`, {
+    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/${type}`, {
       method: 'Post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form.getValues()),

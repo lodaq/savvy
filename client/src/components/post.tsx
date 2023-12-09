@@ -24,13 +24,13 @@ export default function SharePost({ children, post }: { children: React.ReactChi
   const { refetch } = useQuery({ queryKey: ['repoData'] });
 
   const onLike = async () => {
-    await fetch(`${import.meta.env.VITE_URL}/like/${post._id}`, {
+    await fetch(`${import.meta.env.VITE_SERVER_URL}/like/${post._id}`, {
       method: 'Put',
     });
     await refetch();
   };
   const onDelete = async () => {
-    await fetch(`${import.meta.env.VITE_URL}/${post._id}`, {
+    await fetch(`${import.meta.env.VITE_SERVER_URL}/${post._id}`, {
       method: 'Delete',
     });
     await refetch();
