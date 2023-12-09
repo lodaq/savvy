@@ -8,7 +8,7 @@ interface YoutubeVideoProps {
 const YouTubeVideo = ({ url, caption }: YoutubeVideoProps) => {
   // Extract the video ID from the YouTube URL
   const videoId = url.match(
-    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
   );
 
   if (videoId == null) {
@@ -20,7 +20,6 @@ const YouTubeVideo = ({ url, caption }: YoutubeVideoProps) => {
       <iframe
         title={caption}
         src={`https://www.youtube.com/embed/${videoId[1]}`}
-        frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         className="w-full aspect-video"
@@ -31,7 +30,7 @@ const YouTubeVideo = ({ url, caption }: YoutubeVideoProps) => {
 
 YouTubeVideo.propTypes = {
   url: PropTypes.string.isRequired,
-  caption: PropTypes.string,
+  caption: PropTypes.string.isRequired,
 };
 
 export default YouTubeVideo;

@@ -13,7 +13,7 @@ const TextPost: React.FC<TextPostProps> = ({ content }) => {
 
   useEffect(() => {
     // Check if the content is more than 4 lines
-    if (contentRef.current) {
+    if (contentRef.current !== null) {
       setIsOverflowed(contentRef.current.scrollHeight > contentRef.current.clientHeight * 3);
     }
   }, [content]);

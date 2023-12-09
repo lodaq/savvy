@@ -6,3 +6,9 @@ An E-Commerce web application with a dashboard for both Admin, Seller, and Buyer
 ## Tools
 
 - gitflow
+
+## About
+- save all your watch laters here
+  - twitter
+  - facebook
+- save your images here instead of instagram 

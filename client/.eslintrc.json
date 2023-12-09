@@ -16,7 +16,7 @@
     "eslint-config-prettier",
     "prettier"
   ],
-  "ignorePatterns": ["dist", "*.config.*", "tsconfig.json"],
+  "ignorePatterns": ["dist", "*.config.*", "tsconfig.json", "src/components/ui/*"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -46,7 +46,6 @@
     "no-undef": "off",
     "prettier/prettier": "error",
     "no-var": "error",
-    "prefer-const": "error",
-    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }]
+    "prefer-const": "error"
   }
 }

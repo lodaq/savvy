@@ -6,7 +6,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import ArticlesPage from './components/pages/articles';
 import ImagesPage from './components/pages/images';
-import PostsPage from './components/pages/posts';
 import SharesPage from './components/pages/shares';
 import './index.css';
 
@@ -21,7 +20,6 @@ const router = createBrowserRouter([
     children: [
       { path: 'images', element: <ImagesPage /> },
       { path: 'articles', element: <ArticlesPage /> },
-      { path: 'posts', element: <PostsPage /> },
       { path: 'shares', element: <SharesPage /> },
     ],
   },

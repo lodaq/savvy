@@ -1,4 +1,6 @@
 - fix the styling problem
 - add a refresh button to the loading spinner to refresh the page because of render
 - add the update functionality for the shares page
-- 
+- how to create migrations for the mongodb database
+- what is migration
+- what is this

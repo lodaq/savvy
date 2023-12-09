@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import mongoose, { Schema, Document, model, Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { Pool } from 'pg';
 // initialize environment variables
 dotenv.config();
@@ -50,5 +50,10 @@ async function main() {
 main()
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => console.log(`MongoDB connection error: ${err}`));
+
+client
+  .connect()
+  .then(() => console.log('Postgres connected successfully'))
+  .catch((err) => console.log(`Postgres connection error: ${err}`));
 
 export default client;

@@ -13,5 +13,12 @@
     "user": "kmsf",
     "password": "password"
   },
+  "prod": {
+    "driver": "pg",
+    "host": "db.vadzgguznnjfppiwjgrh.supabase.co",
+    "database": "postgres",
+    "user": "savvy",
+    "password": "fcrqfGG3FaLQF7Ed"
+  },
   "sql-file": true
 }
