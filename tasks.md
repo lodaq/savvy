@@ -5,4 +5,5 @@
 - what is migration
 - what is this
 - remove next ui
--
+- add the likes you from that person
+- add update method for posts

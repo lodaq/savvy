@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import types from '@/lib/share-types.json';
@@ -21,9 +22,9 @@ import { useState } from 'react';
 
 const PostSchema = z.object({
   type: z.string(),
-  caption: z.string().optional(),
-  text: z.string().optional(),
+  caption: z.string(),
   url: z.string().optional(),
+  text: z.string().optional(),
   quote: z.string().optional(),
   author: z.string().optional(),
 });
@@ -51,8 +52,7 @@ export default function Posts() {
     },
   });
 
-  const type = form.getValues().type;
-  console.log(type);
+  const type = form.watch().type;
 
   async function onSubmit(data: z.infer<typeof PostSchema>) {
     const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/${type}`, {
@@ -76,7 +76,7 @@ export default function Posts() {
     toast({
       title: 'You submitted the following values:',
       description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4 overflow-auto">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
@@ -89,9 +89,9 @@ export default function Posts() {
 
   return (
     <div className="w-full bg-slate-500 p-2 flex flex-col lg:flex-row gap-3 items-center lg:justify-center lg:items-start">
-      <div className="max-w-[540px] w-full">
+      <div className="max-w-[564px] w-full">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1 bg-neutral-300 p-2 rounded-md">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 bg-neutral-300 p-2 rounded-md">
             <FormField
               control={form.control}
               name="type"
@@ -101,7 +101,7 @@ export default function Posts() {
                   <FormControl>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a type" />
+                        <SelectValue placeholder="Select a type." />
                       </SelectTrigger>
                       <SelectContent>
                         {types.map((type) => (
@@ -112,7 +112,6 @@ export default function Posts() {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormDescription>Select tye type of the post you want to share</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -127,11 +126,10 @@ export default function Posts() {
                     <Textarea
                       placeholder="What's on your mind, khalid?"
                       className="resize-none"
-                      dir={detectLanguage(form.getValues().caption!) === 'arabic' ? 'rtl' : 'ltr'}
+                      dir={detectLanguage(form.getValues().caption) === 'arabic' ? 'rtl' : 'ltr'}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>What is on your mind, khalid?</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -144,9 +142,8 @@ export default function Posts() {
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="url" type={`Type the URL of the ${type}`} {...field} />
+                      <Input placeholder={`Type the URL of the ${type}.`} {...field} />
                     </FormControl>
-                    <FormDescription>Write the URL of the {type} you want to share</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -165,11 +162,10 @@ export default function Posts() {
                           type="text"
                           required
                           dir={detectLanguage(form.getValues().quote!) === 'arabic' ? 'rtl' : 'ltr'}
-                          placeholder="quote"
+                          placeholder="Type the quote."
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>Write the quote you want to share</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -185,11 +181,10 @@ export default function Posts() {
                           type="text"
                           required
                           dir={detectLanguage(form.getValues().author!) === 'arabic' ? 'rtl' : 'ltr'}
-                          placeholder="author"
+                          placeholder="Type the author of the quote."
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>Write the author of the quote</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -208,11 +203,10 @@ export default function Posts() {
                         type="text"
                         required
                         dir={detectLanguage(form.getValues().text!) === 'arabic' ? 'rtl' : 'ltr'}
-                        placeholder="text"
+                        placeholder="Type the text."
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>Write the text you want to share.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -223,42 +217,46 @@ export default function Posts() {
         </Form>
       </div>
 
-      <div className="flex flex-col gap-2 p-2 bg-slate-300 rounded-md max-h-[calc(100vh-16px)] overflow-auto max-w-[500px]">
-        {data.slice(0, numOfShowedPosts).map((p: Post) => {
-          return (
-            <Post key={p._id} post={p}>
-              <>
-                {p.type === 'video' && <YouTubeVideo url={p.url} caption={p.caption} />}
-                {p.type === 'image' && <LazyImage imageUrl={p.url} altText={p.caption !== '' ? p.caption : 'image'} />}
-                {p.type === 'short' && <YouTubeShort shortUrl={p.url} title="short" />}
-                {p.type === 'link' && (
-                  <NotionLink
-                    url={p.url}
-                    meta={{
-                      favicon: p.favicon,
-                      ogImage: p.ogImage,
-                      ogDescription: p.ogDescription,
-                      ogTitle: p.ogTitle,
-                    }}
-                  />
-                )}
-                {p.type === 'text' && <TextPost content={p.text} />}
-                {p.type === 'quote' && <Quote quote={p.quote} author={form.getValues().author!} />}
-              </>
-            </Post>
-          );
-        })}
-        {numOfShowedPosts < data.length && (
-          <Button
-            onClick={() => {
-              const newNumOfShowedPosts = numOfShowedPosts + 10 > data.length ? data.length : numOfShowedPosts + 10;
-              setNumOfShowedPosts(newNumOfShowedPosts);
-            }}
-          >
-            More
-          </Button>
-        )}
-      </div>
+      <ScrollArea className="flex flex-col border p-3 bg-slate-600 rounded-md max-h-[calc(100vh-16px)] max-w-[564px]">
+        <div className="flex flex-col gap-2">
+          {data.slice(0, numOfShowedPosts).map((p: Post) => {
+            return (
+              <Post key={p._id} post={p}>
+                <>
+                  {p.type === 'video' && <YouTubeVideo url={p.url} caption={p.caption} />}
+                  {p.type === 'image' && (
+                    <LazyImage imageUrl={p.url} altText={p.caption !== '' ? p.caption : 'image'} />
+                  )}
+                  {p.type === 'short' && <YouTubeShort shortUrl={p.url} title="short" />}
+                  {p.type === 'link' && (
+                    <NotionLink
+                      url={p.url}
+                      meta={{
+                        favicon: p.favicon,
+                        ogImage: p.ogImage,
+                        ogDescription: p.ogDescription,
+                        ogTitle: p.ogTitle,
+                      }}
+                    />
+                  )}
+                  {p.type === 'text' && <TextPost content={p.text} />}
+                  {p.type === 'quote' && <Quote quote={p.quote} author={form.getValues().author!} />}
+                </>
+              </Post>
+            );
+          })}
+          {numOfShowedPosts < data.length && (
+            <Button
+              onClick={() => {
+                const newNumOfShowedPosts = numOfShowedPosts + 10 > data.length ? data.length : numOfShowedPosts + 10;
+                setNumOfShowedPosts(newNumOfShowedPosts);
+              }}
+            >
+              More
+            </Button>
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
