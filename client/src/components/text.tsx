@@ -25,9 +25,8 @@ const TextPost: React.FC<TextPostProps> = ({ content }) => {
   return (
     <div>
       <p
-        className={`text-lg leading-7 ${isExpanded ? 'block' : 'line-clamp-3'} ${
-          detectLanguage(content) === 'arabic' && 'text-right'
-        }`}
+        dir={detectLanguage(content) === 'arabic' ? 'rtl' : 'ltr'}
+        className={`text-lg leading-7 ${isExpanded ? 'block' : 'line-clamp-3'}`}
         ref={contentRef}
       >
         {content}

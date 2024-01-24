@@ -142,7 +142,7 @@ export default function Posts() {
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input placeholder={`Type the URL of the ${type}.`} {...field} />
+                      <Input placeholder={`Type the URL of the ${type}.`} required {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
