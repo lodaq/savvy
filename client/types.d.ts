@@ -31,5 +31,6 @@ type Post = {
   | {
       type: 'quote';
       quote: string;
+      author: string;
     }
 );
