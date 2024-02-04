@@ -1,50 +1,45 @@
 import express, { Request, Response } from 'express';
 import ogs from 'open-graph-scraper';
 import Share from '../models/shares';
+import { RequireAuthProp } from '@clerk/clerk-sdk-node';
 
-const store = new Share();
-
-const index = async (_req: Request, res: Response) => {
+const index = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
+    const store = new Share(req.auth.userId);
     const posts = await store.index();
     const sortedPosts = posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    console.log(sortedPosts);
     res.json(sortedPosts);
   } catch (error) {
     res.status(400).json(error);
   }
 };
 
-const show = async (req: Request, res: Response) => {
+const createText = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    const post = await store.show(req.params.id);
-    if (!post) {
-      res.status(404).json({ error: 'Post not found' });
-      return;
-    }
-    res.json(post);
-  } catch (error) {
-    res.status(400).json(error);
-  }
-};
-
-const createText = async (req: Request, res: Response) => {
-  try {
-    const text = req.body.text;
-    const caption = req.body.caption;
+    const store = new Share(req.auth.userId);
+    const { text, caption } = req.body;
     const newPost = await store.createText(text, caption);
-    console.log(newPost);
     res.json(newPost);
   } catch (error) {
-    console.log('error happened');
-    res.status(400).json({ error: 'Bad Request' });
+    res.status(400).json({ error: 'Bad Request: ' + error });
   }
 };
 
-const createVideo = async (req: Request, res: Response) => {
+const updateText = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    const url = req.body.url;
-    const caption = req.body.caption;
+    const store = new Share(req.auth.userId);
+    const { _id, text, caption } = req.body;
+    const newPost = await store.updateText(_id, text, caption);
+    res.json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: 'Bad Request: ' + error });
+  }
+};
+
+const createVideo = async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    const store = new Share(req.auth.userId);
+    const { url, caption } = req.body;
     const newPost = await store.createVideo(url, caption);
     res.json(newPost);
   } catch (error) {
@@ -52,21 +47,43 @@ const createVideo = async (req: Request, res: Response) => {
   }
 };
 
-const createQuote = async (req: Request, res: Response) => {
+const updateVideo = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    const quote = req.body.quote;
-    const caption = req.body.caption;
-    const newPost = await store.createQuote(quote, caption);
+    const store = new Share(req.auth.userId);
+    const { _id, url, caption } = req.body;
+    const newPost = await store.updateVideo(_id, url, caption);
+    res.json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: 'Bad Request: ' + error });
+  }
+};
+
+const createQuote = async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    const store = new Share(req.auth.userId);
+    const { quote, caption, author } = req.body;
+    const newPost = await store.createQuote(quote, caption, author);
     res.json(newPost);
   } catch (error) {
     res.status(400).json(error);
   }
 };
 
-const createImage = async (req: Request, res: Response) => {
+const updateQuote = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    const url = req.body.url;
-    const caption = req.body.caption;
+    const store = new Share(req.auth.userId);
+    const { _id, quote, author, caption } = req.body;
+    const newPost = await store.updateQuote(_id, quote, author, caption);
+    res.json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: 'Bad Request: ' + error });
+  }
+};
+
+const createImage = async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    const store = new Share(req.auth.userId);
+    const { url, caption } = req.body;
     const newPost = await store.createImage(url, caption);
     res.json(newPost);
   } catch (error) {
@@ -74,10 +91,21 @@ const createImage = async (req: Request, res: Response) => {
   }
 };
 
-const createShort = async (req: Request, res: Response) => {
+const updateImage = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    const url = req.body.url;
-    const caption = req.body.caption;
+    const store = new Share(req.auth.userId);
+    const { _id, url, caption } = req.body;
+    const newPost = await store.updateImage(_id, url, caption);
+    res.json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: 'Bad Request: ' + error });
+  }
+};
+
+const createShort = async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    const store = new Share(req.auth.userId);
+    const { url, caption } = req.body;
     const newPost = await store.createShort(url, caption);
     res.json(newPost);
   } catch (error) {
@@ -85,10 +113,21 @@ const createShort = async (req: Request, res: Response) => {
   }
 };
 
-const createLink = async (req: Request, res: Response) => {
+const updateShort = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    const url: string = req.body.url;
-    const caption = req.body.caption;
+    const store = new Share(req.auth.userId);
+    const { _id, url, caption } = req.body;
+    const newPost = await store.updateShort(_id, url, caption);
+    res.json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: 'Bad Request: ' + error });
+  }
+};
+
+const createLink = async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    const store = new Share(req.auth.userId);
+    const { url, caption } = req.body;
     const {
       result: { ogDescription, ogTitle, ogImage, favicon },
     } = await ogs({ url });
@@ -108,8 +147,20 @@ const createLink = async (req: Request, res: Response) => {
   }
 };
 
-const likePost = async (req: Request, res: Response) => {
+const updateLink = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
+    const store = new Share(req.auth.userId);
+    const { _id, url, caption } = req.body;
+    const newPost = await store.updateLink(_id, url, caption);
+    res.json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: 'Bad Request: ' + error });
+  }
+};
+
+const likePost = async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    const store = new Share(req.auth.userId);
     const post = await store.likePost(req.params.id);
     if (!post) {
       res.status(404).json({ error: 'Post not found' });
@@ -121,9 +172,10 @@ const likePost = async (req: Request, res: Response) => {
   }
 };
 
-const destroy = async (req: Request, res: Response) => {
+const destroy = async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    const deleted = await store.delete(req.params.id);
+    const store = new Share(req.auth.userId);
+    const deleted = await store.delete(req.params.id.toString());
     if (!deleted) {
       res.status(404).json({ error: 'Post not found' });
       return;
@@ -136,15 +188,27 @@ const destroy = async (req: Request, res: Response) => {
 
 const shareRoutes = (app: express.Application) => {
   app.get('/shares', index);
-  app.get('/shares/:id', show);
+
   app.post('/shares/text', createText);
+  app.patch('/shares/text', updateText);
+
   app.post('/shares/video', createVideo);
+  app.patch('/shares/video', updateVideo);
+
   app.post('/shares/quote', createQuote);
+  app.patch('/shares/quote', updateQuote);
+
   app.post('/shares/image', createImage);
+  app.patch('/shares/image', updateImage);
+
   app.post('/shares/short', createShort);
+  app.patch('/shares/short', updateShort);
+
   app.post('/shares/link', createLink);
+  app.patch('/shares/link', updateLink);
+
   app.put('/shares/like/:id', likePost);
-  app.delete('/shares/:id', destroy);
+  app.delete('/shares/delete/:id', destroy);
 };
 
 export default shareRoutes;

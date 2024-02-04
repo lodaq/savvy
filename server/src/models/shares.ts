@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, Types, model } from 'mongoose';
+import mongoose, { Document, Model, Schema, Types, model, models } from 'mongoose';
 
 // Define a base schema with common fields
 const shareBaseSchema = new Schema({
@@ -69,11 +69,13 @@ const imageSchema = new Schema<ImageDocument>(
 
 interface QuoteDocument extends Document {
   quote: string;
+  author: string;
 }
 
 const quoteSchema = new Schema<QuoteDocument>(
   {
     quote: String,
+    author: String,
   },
   discriminatorOptions,
 );
@@ -88,17 +90,6 @@ const textSchema = new Schema<TextDocument>(
   },
   discriminatorOptions,
 );
-
-// Create models using discriminators
-const ShareModel = model('Share', shareBaseSchema);
-const VideoModel = ShareModel.discriminator<VideoDocument>('video', videoSchema);
-const ShortModel = ShareModel.discriminator<ShortDocument>('short', shortSchema);
-const LinkModel = ShareModel.discriminator<LinkDocument>('link', linkSchema);
-const ImageModel = ShareModel.discriminator<ImageDocument>('image', imageSchema);
-const QuoteModel = ShareModel.discriminator<QuoteDocument>('quote', quoteSchema);
-const TextModel = ShareModel.discriminator<TextDocument>('text', textSchema);
-
-export { ShareModel, imageSchema, linkSchema, quoteSchema, shortSchema, textSchema, videoSchema };
 
 interface ShareDocument extends Document {
   date: Date;
@@ -116,9 +107,39 @@ interface CreatePostFields {
 }
 
 class Share {
+  private ShareModel: Model<ShareDocument>;
+  private VideoModel: Model<VideoDocument>;
+  private ShortModel: Model<ShortDocument>;
+  private LinkModel: Model<LinkDocument>;
+  private ImageModel: Model<ImageDocument>;
+  private QuoteModel: Model<QuoteDocument>;
+  private TextModel: Model<TextDocument>;
+
+  constructor(userId: string) {
+    this.ShareModel = models[`${userId}_posts`] || model<ShareDocument>(`${userId}_posts`, shareBaseSchema);
+    this.QuoteModel =
+      models[`${userId}_posts_quote`] ||
+      this.ShareModel.discriminator<QuoteDocument>(`${userId}_posts_quote`, quoteSchema);
+
+    this.ShortModel =
+      models[`${userId}_posts_short`] ||
+      this.ShareModel.discriminator<ShortDocument>(`${userId}_posts_short`, shortSchema);
+    this.VideoModel =
+      models[`${userId}_posts_video`] ||
+      this.ShareModel.discriminator<VideoDocument>(`${userId}_posts_video`, videoSchema);
+    this.LinkModel =
+      models[`${userId}_posts_link`] || this.ShareModel.discriminator<LinkDocument>(`${userId}_posts_link`, linkSchema);
+    this.ImageModel =
+      models[`${userId}_posts_image`] ||
+      this.ShareModel.discriminator<ImageDocument>(`${userId}_posts_image`, imageSchema);
+    this.TextModel =
+      models[`${userId}_posts_text`] || this.ShareModel.discriminator<TextDocument>(`${userId}_posts_text`, textSchema);
+    // console.log('all models', models);
+  }
+
   async index(): Promise<Array<ShareDocument>> {
     try {
-      const result = await ShareModel.find();
+      const result = await this.ShareModel.find();
       return result as Array<ShareDocument>;
     } catch (error) {
       throw new Error(`Could not get the posts. Error: ${error}`);
@@ -127,7 +148,7 @@ class Share {
 
   async show(id: string): Promise<ShareDocument | null> {
     try {
-      const result = await ShareModel.findById(id);
+      const result = await this.ShareModel.findById(id);
       return result as ShareDocument | null;
     } catch (err) {
       throw new Error(`Could not find post ${id}. Error: ${err}`);
@@ -143,7 +164,7 @@ class Share {
         caption,
       };
 
-      const result = await TextModel.create({
+      const result = await this.TextModel.create({
         ...postFields,
         type: 'text',
         text,
@@ -164,7 +185,7 @@ class Share {
         caption,
       };
 
-      const result = await VideoModel.create({
+      const result = await this.VideoModel.create({
         ...postFields,
         type: 'video',
         url,
@@ -176,7 +197,7 @@ class Share {
     }
   }
 
-  async createQuote(quote: string, caption: string): Promise<QuoteDocument> {
+  async createQuote(quote: string, caption: string, author: string): Promise<QuoteDocument> {
     try {
       const postFields: CreatePostFields = {
         _id: new mongoose.Types.ObjectId(),
@@ -185,10 +206,11 @@ class Share {
         caption,
       };
 
-      const result = await QuoteModel.create({
+      const result = await this.QuoteModel.create({
         ...postFields,
         type: 'quote',
         quote,
+        author,
       });
 
       return result as QuoteDocument;
@@ -206,7 +228,7 @@ class Share {
         caption,
       };
 
-      const result = await ImageModel.create({
+      const result = await this.ImageModel.create({
         ...postFields,
         type: 'image',
         url,
@@ -227,7 +249,7 @@ class Share {
         caption,
       };
 
-      const result = await ShortModel.create({
+      const result = await this.ShortModel.create({
         ...postFields,
         type: 'short',
         url,
@@ -257,7 +279,7 @@ class Share {
         caption,
       };
 
-      const result = await LinkModel.create({
+      const result = await this.LinkModel.create({
         ...postFields,
         type: 'link',
         ...link,
@@ -269,54 +291,63 @@ class Share {
     }
   }
 
-  async updateText(id: string, newText: string): Promise<TextDocument | null> {
+  async updateText(id: string, newText: string, newCaption: string): Promise<TextDocument | null> {
     try {
-      const result = await TextModel.findByIdAndUpdate(id, { text: newText }, { new: true });
+      const result = await this.TextModel.findByIdAndUpdate(id, { text: newText, caption: newCaption }, { new: true });
       return result as TextDocument | null;
     } catch (error) {
       throw new Error(`Could not update text post ${id}. Error: ${error}`);
     }
   }
 
-  async updateVideo(id: string, newUrl: string): Promise<VideoDocument | null> {
+  async updateVideo(id: string, newUrl: string, newCaption: string): Promise<VideoDocument | null> {
     try {
-      const result = await VideoModel.findByIdAndUpdate(id, { url: newUrl }, { new: true });
+      const result = await this.VideoModel.findByIdAndUpdate(id, { url: newUrl, caption: newCaption }, { new: true });
       return result as VideoDocument | null;
     } catch (error) {
       throw new Error(`Could not update video post ${id}. Error: ${error}`);
     }
   }
 
-  async updateQuote(id: string, newQuote: string): Promise<QuoteDocument | null> {
+  async updateQuote(
+    id: string,
+    newQuote: string,
+    newAuthor: string,
+    newCaption: string,
+  ): Promise<QuoteDocument | null> {
     try {
-      const result = await QuoteModel.findByIdAndUpdate(id, { quote: newQuote }, { new: true });
+      const result = await this.QuoteModel.findByIdAndUpdate(
+        id,
+        { quote: newQuote, author: newAuthor, caption: newCaption },
+        { new: true },
+      );
       return result as QuoteDocument | null;
     } catch (error) {
       throw new Error(`Could not update quote post ${id}. Error: ${error}`);
     }
   }
 
-  async updateImage(id: string, newUrl: string): Promise<ImageDocument | null> {
+  async updateImage(id: string, newUrl: string, newCaption: string): Promise<ImageDocument | null> {
     try {
-      const result = await ImageModel.findByIdAndUpdate(id, { url: newUrl }, { new: true });
+      const result = await this.ImageModel.findByIdAndUpdate(id, { url: newUrl, caption: newCaption }, { new: true });
       return result as ImageDocument | null;
     } catch (error) {
       throw new Error(`Could not update image post ${id}. Error: ${error}`);
     }
   }
 
-  async updateShort(id: string, newUrl: string): Promise<ShortDocument | null> {
+  async updateShort(id: string, newUrl: string, newCaption: string): Promise<ShortDocument | null> {
     try {
-      const result = await ShortModel.findByIdAndUpdate(id, { url: newUrl }, { new: true });
+      const result = await this.ShortModel.findByIdAndUpdate(id, { url: newUrl, caption: newCaption }, { new: true });
       return result as ShortDocument | null;
     } catch (error) {
       throw new Error(`Could not update short post ${id}. Error: ${error}`);
     }
   }
 
-  async updateLink(id: string, newUrl: string): Promise<LinkDocument | null> {
+  async updateLink(id: string, newUrl: string, newCaption: string): Promise<LinkDocument | null> {
     try {
-      const result = await LinkModel.findByIdAndUpdate(id, { url: newUrl }, { new: true });
+      const result = await this.LinkModel.findByIdAndUpdate(id, { url: newUrl, caption: newCaption }, { new: true });
       return result as LinkDocument | null;
     } catch (error) {
       throw new Error(`Could not update link post ${id}. Error: ${error}`);
@@ -325,7 +356,7 @@ class Share {
 
   async likePost(id: string) {
     try {
-      const post = await ShareModel.findById(id);
+      const post = await this.ShareModel.findById(id);
 
       if (!post) return null;
 
@@ -341,7 +372,7 @@ class Share {
 
   async delete(id: string): Promise<ShareDocument | null> {
     try {
-      const result = await ShareModel.findByIdAndDelete(id);
+      const result = await this.ShareModel.findByIdAndDelete(id);
       return result as unknown as ShareDocument;
     } catch (error) {
       throw new Error(`Could not delete post ${id}. Error: ${error}`);

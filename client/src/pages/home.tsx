@@ -1,3 +1,3 @@
-export default function HomePage() {
+export default function Homepage() {
   return <div>HomePage</div>;
 }
