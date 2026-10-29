@@ -1,7 +1,0 @@
-# Ignore artifacts:
-build
-dist
-node_modules
-*.config.*
-vite.config.ts
-tsconfig.json
