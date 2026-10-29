@@ -188,7 +188,7 @@ export async function updateShare(
   const share = await ShareModel.findOneAndUpdate(
     { _id: id, userId },
     { $set: fullUpdateData },
-    { new: true }
+    { returnDocument: 'after' }
   ).lean();
 
   if (!share) throw new Error('Share not found or unauthorized');
@@ -232,7 +232,7 @@ export async function likeShare(id: string) {
         $inc: { likes: 1 },
       };
 
-  const updated = await ShareModel.findByIdAndUpdate(id, update, { new: true }).lean();
+  const updated = await ShareModel.findByIdAndUpdate(id, update, { returnDocument: 'after' }).lean();
   if (!updated) throw new Error('Share not found');
 
   if (updated.likes < 0) {

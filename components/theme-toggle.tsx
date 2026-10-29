@@ -65,13 +65,13 @@ export function ThemeToggle({ collapsed = false }: { collapsed?: boolean }) {
 
       <div
         className={cn(
-          'w-8 h-4 rounded-full p-0.5 transition-colors relative flex items-center',
+          'w-8 h-4 rounded-full p-0.5 transition-colors relative',
           isDark ? 'bg-primary' : 'bg-muted-foreground/30'
         )}
       >
         <div
           className={cn(
-            'w-3 h-3 rounded-full bg-background shadow-xs transition-transform duration-200 ease-in-out',
+            'w-3 h-3 rounded-full bg-background shadow-xs transition-transform duration-200 ease-in-out absolute top-0.5',
             isDark ? 'translate-x-4' : 'translate-x-0'
           )}
         />

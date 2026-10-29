@@ -107,7 +107,7 @@ export async function updateArticle(
   const article = await ArticleModel.findOneAndUpdate(
     { _id: id, userId },
     { $set: validated },
-    { new: true }
+    { returnDocument: 'after' }
   ).lean();
 
   if (!article) throw new Error('Article not found or unauthorized');
