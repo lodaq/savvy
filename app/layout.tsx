@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'sonner';
 import { ThemeProvider } from '@/components/theme-provider';
-import '@uploadthing/react/styles.css';
 import './globals.css';
 
 export const metadata: Metadata = {
