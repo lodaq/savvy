@@ -16,7 +16,7 @@ export default function MDXRenderer({ source }: MDXRendererProps) {
         options={{
           mdxOptions: {
             remarkPlugins: [remarkGfm],
-            rehypePlugins: [rehypeHighlight as unknown as import('unified').Pluggable],
+            rehypePlugins: [rehypeHighlight],
           },
         }}
       />
