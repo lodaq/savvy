@@ -8,7 +8,7 @@ A modern, full-stack CMS and digital workspace built with **Next.js 16 (App Rout
 
 ## Development status
 
-The CMS and portfolio API are under active development. The previously configured deployment at `https://savvy-z.vercel.app` returned HTTP 404 when checked on 2026-11-06. No working public website is currently advertised. Running the CMS requires the configured authentication and data services; a local build alone does not verify production access. Keep server credentials private. The API integration limitations below are part of the current contract.
+The CMS and portfolio API are under active development. The [hosted app](https://savvycms.vercel.app) responded successfully when checked on 2026-11-06. The older `savvy-z.vercel.app` address returned HTTP 404. Running the CMS requires the configured authentication and data services; a local build or homepage response alone does not verify authenticated publishing workflows. Keep server credentials private. The API integration limitations below are part of the current contract.
 
 ## Features
 
