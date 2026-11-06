@@ -1,8 +1,14 @@
 # Savvy — Personal Content Management & Curation System
 
-A modern, full-stack CMS and digital workspace built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Mongoose**. Savvy empowers you to capture, curate, write, and serve diverse content formats seamlessly with a **$0/month permanent free-tier architecture**.
+![Status: Under development](https://img.shields.io/badge/status-under_development-orange)
+
+A modern, full-stack CMS and digital workspace built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Mongoose 9**. Savvy empowers you to capture, curate, write, and serve diverse content formats seamlessly using Clerk authentication, MongoDB, and Uploadthing. Hosting and service limits depend on the providers and selected plans.
 
 ---
+
+## Development status
+
+The CMS and portfolio API are under active development. The previously configured deployment at `https://savvy-z.vercel.app` returned HTTP 404 when checked on 2026-11-06. No working public website is currently advertised. Running the CMS requires the configured authentication and data services; a local build alone does not verify production access. Keep server credentials private. The API integration limitations below are part of the current contract.
 
 ## Features
 
@@ -28,30 +34,30 @@ A modern, full-stack CMS and digital workspace built with **Next.js 15 (App Rout
 - **Asset Management**: One-click CDN URL copying, direct file downloading, and cloud deletion.
 
 ### 4. Managed Authentication & Security
-- **Clerk v6**: Complete session and authentication management with Next.js App Router middleware route protection.
+- **Clerk**: Complete session and authentication management with Next.js App Router middleware route protection.
 - **Tenant Isolation**: User data isolated by authenticated `userId` in MongoDB collections.
 
 ---
 
-## Tech Stack ($0 Monthly Cost)
+## Tech Stack
 
-| Service | Technology | Free Tier Details |
+| Service | Technology | Hosting notes |
 |---|---|---|
-| **Framework** | Next.js 15 (App Router, Server Components) | Open Source |
+| **Framework** | Next.js 16 (App Router, Server Components) | Open Source |
 | **Language** | TypeScript (Strict mode) | Open Source |
-| **Authentication** | [@clerk/nextjs](https://clerk.com) | 10,000 monthly active users |
-| **Database** | MongoDB Atlas via Mongoose 8 | 512 MB forever (shared tier) |
-| **Storage / CDN** | [Uploadthing](https://uploadthing.com) | 2 GB storage, generous bandwidth |
+| **Authentication** | [@clerk/nextjs](https://clerk.com) | Clerk plan limits apply |
+| **Database** | MongoDB Atlas via Mongoose 9 | Atlas plan limits apply |
+| **Storage / CDN** | [Uploadthing](https://uploadthing.com) | Uploadthing plan limits apply |
 | **MDX Engine** | next-mdx-remote + @mdxeditor/editor | Open Source |
 | **Styling & UI** | Tailwind CSS + Shadcn UI + Radix UI + Lucide | Open Source |
-| **Deployment** | Vercel (Hobby Tier) | Permanent free tier |
+| **Deployment** | Vercel (Hobby Tier) | Hobby plan limits apply |
 
 ---
 
 ## Getting Started
 
 ### 1. Prerequisites
-- Node.js >= 18.18.0 (Node 20+ recommended)
+- Node.js >= 20.9.0 (check current dependency requirements)
 - A free [Clerk](https://clerk.com) account
 - A free [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) cluster
 - A free [Uploadthing](https://uploadthing.com) account
@@ -59,17 +65,17 @@ A modern, full-stack CMS and digital workspace built with **Next.js 15 (App Rout
 ### 2. Clone & Install
 
 ```bash
-git clone https://github.com/sebaq/savvy.git
+git clone https://github.com/lodaq/savvy.git
 cd savvy
 npm install
 ```
 
 ### 3. Environment Setup
 
-Copy `.env.example` to `.env.local`:
+Create `.env.local` (or copy the example if present):
 
 ```bash
-cp .env.example .env.local
+touch .env.local
 ```
 
 Fill in your secrets:
@@ -197,7 +203,7 @@ savvy/
 │   ├── share.ts              # Polymorphic shares (discriminator pattern)
 │   ├── article.ts            # MDX articles schema
 │   └── gallery-image.ts      # Cloud image metadata schema
-├── middleware.ts             # Clerk auth gatekeeper
+├── proxy.ts                  # Clerk request integration
 ├── next.config.ts            # Next.js configuration
 ├── tailwind.config.ts        # Tailwind configuration
 └── tsconfig.json             # TypeScript configuration
